@@ -1,0 +1,694 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="#2023SSSCTFのwrite up   ##PWN###test your nc根据nc教程,下载并使用windows版nc，然后用powershell打开nc，键入’.&#x2F;ncat 地址 端口’，成功连接后，输入’cat &#x2F;flag’就能拿到flag了###Hack Traffic Light利用nc连接上服务器，按照题目要求随便输入几个数，然后观察输出的变化！，不难发现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023SSSCTF WriteUp">
+<meta property="og:url" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="#2023SSSCTFのwrite up   ##PWN###test your nc根据nc教程,下载并使用windows版nc，然后用powershell打开nc，键入’.&#x2F;ncat 地址 端口’，成功连接后，输入’cat &#x2F;flag’就能拿到flag了###Hack Traffic Light利用nc连接上服务器，按照题目要求随便输入几个数，然后观察输出的变化！，不难发现">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://txpoki.github.io/photo/hardtriffic1.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/strange1.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/caokongjiami1.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/ezphp1.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/Snipaste_2023-10-12_19-37-31.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/info1.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/yuansql.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/ezphp2.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/ezphp2_2.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/sleephead1.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/sleep2.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/sleep3.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/sleep4.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/sleep5.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/sleep6.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/phase7.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/bas_rsa1.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/power.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/chuidiao.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/chuidiao2.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/chuidiao3.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/chuidiao4.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/chuidioa5.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/chuidiao6.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/chuidiao8.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/cancanneed.jpg">
+<meta property="og:image" content="https://txpoki.github.io/photo/cancanneed2.png">
+<meta property="og:image" content="https://txpoki.github.io/photo/cancanneed3.png">
+<meta property="article:published_time" content="2023-10-22T05:18:11.000Z">
+<meta property="article:modified_time" content="2023-10-22T09:09:29.246Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://txpoki.github.io/photo/hardtriffic1.png">
+  
+  
+  
+  <title>2023SSSCTF WriteUp - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"txpoki.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="2023SSSCTF WriteUp"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-22 13:18" pubdate>
+          October 22, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          68 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">2023SSSCTF WriteUp</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>#2023SSSCTFのwrite up  </p>
+<p>##PWN<br>###test your nc<br>根据<a target="_blank" rel="noopener" href="https://loora1n.github.io/2022/09/13/nc%20%E6%98%AF%E4%BB%80%E4%B9%88/">nc教程</a>,下载并使用windows版nc，然后用powershell打开nc，键入’.&#x2F;ncat 地址 端口’，成功连接后，输入’cat &#x2F;flag’就能拿到flag了<br>###Hack Traffic Light<br>利用nc连接上服务器，<br><img src="/photo/hardtriffic1.png" srcset="/img/loading.gif" lazyload><br>按照题目要求随便输入几个数，然后观察输出的变化！，不难发现，三个十六进制数中，第一个数字与第三个数字所对应的秒数互换了，所以我们只要将题目要求的秒数转换成十六进制，并交换一三位再输入，就能得到flag了！<br>###strange graphic<br>利用nc连接上服务器，根据题目，我们不难猜测出这道题目要利用c语言中整形变量数据溢出的漏洞，因此我们只需要构造特定的数，来满足题目条件</p>
+<ol>
+<li>第一小题，他们的和的两倍小于题目要求的，所以我们只需要让结果超出2147483648，让其为一个负数就行了  </li>
+<li>第二小题也是这样，不过构造起来麻烦一点(其实是我忘了，我记忆中好像是构造了一个结果超过了两倍的2147483648的数，让他溢出后变成了一个小正数9，满足题目要求) 然后这里利用了网上的一个分解整数的软件，链接就不放了，网上蛮多的</li>
+<li>第三部分输入-1和2147483648就行了，下面放图片<br><img src="/photo/strange1.png" srcset="/img/loading.gif" lazyload>  <blockquote>
+<p>###这就是我所做出pwn试题</p>
+</blockquote>
+</li>
+</ol>
+<p>##REVERSE  </p>
+<p>###操控加密<br>题目给了我们一串密文和一个用来加密的程序，输入字符便能给我们返回加密后的数据，<br><img src="/photo/caokongjiami1.png" srcset="/img/loading.gif" lazyload><br>根据flag的开头，然后把键盘上<br>个字母的大小写和数字输进去，然后人肉破解(解密是真不会啊)，这样我们就能得到flag了</p>
+<blockquote>
+<p>####这就是我所做出REVERSE试题  </p>
+</blockquote>
+<p>##WEB  </p>
+<p>###ezphp<br>题目给了我们一个网站,我们打开网页源代码可以看见这样一行提示<img src="/photo/ezphp1.png" srcset="/img/loading.gif" lazyload><br>将getflag.php输入到url后面，我们可以进录到一个新的页面，打开源码，有以下信息<img src="/photo/Snipaste_2023-10-12_19-37-31.png" srcset="/img/loading.gif" lazyload>这明显是想要提示我们利用get传参的办法，于是加入?DLUT&#x3D;2023SSSCTF，成功获取flag.<br>另外，进入网页的robots.txt文件我们还能获取到彩蛋的最后一个碎片<br>###INFO SELECTION<br>一进到网页网页提示说不会让我们获取源码，我们点击f12,检查源码，可以发现hint<br><img src="/photo/info1.png" srcset="/img/loading.gif" lazyload><br>提示我们敏感文件都有哪些，我们不难想到flag可能藏在如roobots.txt <a target="_blank" rel="noopener" href="http://www.zip/">www.zip</a> 备份（其实是我忘记了第三个是什么貌似是一个.bak文件?）等文件中，在URL中加上这些我们就能够获取到flag的三个碎片，从而得到正确的flag了<br>###YuanのSQL<br>进入网站(我超，原)，观察到网站下方的提示，不难想到这是一个有关于sql注入的题目<br><img src="/photo/yuansql.png" srcset="/img/loading.gif" lazyload><br>不难发现php语句中缺少了引号，键入数值为1的id时，我们获取到了“scr1w”,当键入的数值为2时，我们就成功获取到了flag（具体流程给忘了，所以说的有点不清楚，但大致流程确实是这样的）<br>###ezphp2.0<br>进入网页后我们能看见网页给的php代码<br><img src="/photo/ezphp2.png" srcset="/img/loading.gif" lazyload><br>阅读代码我们不难知道我们首先要让’DLUT&#x3D;A306’成立，代码中要求WEB1不等于WEB2但都要等于114514，而”&#x3D;&#x3D;”为弱相等，我们便可以将他们分别等于114514a于114514b,以get传参后出现<br><img src="/photo/ezphp2_2.png" srcset="/img/loading.gif" lazyload><br>根据弹出的内容，我们可知这有关php伪协议，且经测试flag.php中的flag不能直接获得，所以要经base64编码后获得,满足这两条后，我们构造payload<br><code>http://210.30.97.133:10009/?DLUT=A306&amp;WEB1=114514a&amp;WEB2=114514b&amp;file=php://filter/convert.base64-encode/resource=flag.php</code><br>获取base64编码后的内容<br><code>T0hISEhISEhISEhISCEKWW91IEp1c3QgR2V0IFRoZSBGbGFnISEhIQpTbyBOZXdCZWUh4pSAPeKJoc6jKCgo44Gk4oCizIDPieKAosyBKeOBpOKUgD3iiaHOoygoKOOBpOKAosyAz4nigKLMgSnjgaTilIA94omhzqMoKCjjgaTigKLMgM+J4oCizIEp44GkClRoaXMgaXMgdGhlIGZsYWc6Cjw/cGhwCiRGTEFHID0gJ2ZsYWd7ZDczYmE2ZmItZWJjMC00MWYxLWE3MGYtY2MwOWRlMjlhMjNmfSc7Cj8+</code><br>再解码就能获得flag了<br>###SleepyHead<br>进入网页，看见有关使用浏览器的信息<br><img src="/photo/sleephead1.png" srcset="/img/loading.gif" lazyload><br>猜测可能与http headers的修改有关，于是拖进burpsuite中查看，将浏览器改为Scr1w后变为：<br><img src="/photo/sleep2.png" srcset="/img/loading.gif" lazyload><br>加上Referer:Scr1w.Studio<br><img src="/photo/sleep3.png" srcset="/img/loading.gif" lazyload><br>加上DNT:1变成：<br><img src="/photo/sleep4.png" srcset="/img/loading.gif" lazyload><br>加上via:claaaaash.mono<br><img src="/photo/sleep5.png" srcset="/img/loading.gif" lazyload><br>加上X-Forwarded-For:127.0.0.1<br><img src="/photo/sleep6.png" srcset="/img/loading.gif" lazyload><br>成功获取flag，<br><img src="/photo/phase7.png" srcset="/img/loading.gif" lazyload></p>
+<blockquote>
+<p>####这就是我所做出的WEB试题</p>
+</blockquote>
+<p>##CRYPTO</p>
+<p>###等比数列?<br>根据题目的代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> Crypto.Util.number <span class="hljs-keyword">import</span> *<br>a0 =<br>q =????<br>n = <span class="hljs-number">710009</span><br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>):<br>    a = a0*q % n<br>    a0 = a<br>    <span class="hljs-keyword">if</span> i == <span class="hljs-number">30</span>:<br>        <span class="hljs-built_in">print</span>(a)<br>    <span class="hljs-keyword">if</span> i == <span class="hljs-number">66</span>:<br>        <span class="hljs-built_in">print</span>(a)<br><span class="hljs-comment"># 338473</span><br><span class="hljs-comment"># 519563</span><br></code></pre></td></tr></table></figure>
+<p>可写出这样一个代码(实际上是GPT写的),</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> Crypto.Util.number <span class="hljs-keyword">import</span> *<br><br>n = <span class="hljs-number">710009</span><br><br><span class="hljs-comment"># 遍历所有可能的 a0 和 q 的值</span><br><span class="hljs-keyword">for</span> a0 <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1000</span>, <span class="hljs-number">10000</span>):<br>    <span class="hljs-keyword">for</span> q <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">2</span>, n):<br>        <span class="hljs-comment"># 计算第31项和第67项</span><br>        a31 = a0<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">30</span>):<br>            a31 = a31 * q % n<br>        a67 = a31<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">36</span>):<br>            a67 = a67 * q % n<br>        <span class="hljs-comment"># 检查是否满足题目给出的值</span><br>        <span class="hljs-keyword">if</span> a31 == <span class="hljs-number">338473</span> <span class="hljs-keyword">and</span> a67 == <span class="hljs-number">519563</span>:<br>            <span class="hljs-comment"># 打印出一组解</span><br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;a0 =&quot;</span>, a0, <span class="hljs-string">&quot;q =&quot;</span>, q)<br>            <span class="hljs-keyword">break</span><br></code></pre></td></tr></table></figure>
+<p>最后破解出a0和q的值分别为3202和2023，从而得出flag(GPT立大功)<br>###basic-RSA</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># python是ctf中最常用的语言，请你通过搜索引擎，自行安装python，并学习如何为python安装第三方库</span><br><span class="hljs-comment"># 在配置好python环境后，你需要自行安装pycryptodome库、gmpy2库</span><br><span class="hljs-comment"># 在完成所有配置后，可以运行这段代码，得到你的flag！</span><br><span class="hljs-keyword">from</span> Crypto.Util.number <span class="hljs-keyword">import</span> *<br><span class="hljs-comment"># 导入我们下载的crypto库，方便后续使用库中的函数</span><br><br><span class="hljs-comment"># bytes_to_long()函数，把字母转成数字</span><br>m = bytes_to_long(<span class="hljs-string">b&#x27;**********************************&#x27;</span>)<br><br><span class="hljs-comment"># 生成两个随机的素数，取名p和q</span><br>e = <span class="hljs-number">65537</span><br>p = getPrime(<span class="hljs-number">512</span>)<br>q = getPrime(<span class="hljs-number">512</span>)<br><br><span class="hljs-comment"># 计算p乘q</span><br>n = p*q<br><br><span class="hljs-comment"># RSA加密，pow()实现了次幂运算，第三个参数是模数，例如pow(2,4,3)=(2*2*2*2) % 3 = 1</span><br>c = <span class="hljs-built_in">pow</span>(m, e, n)<br><br><span class="hljs-comment"># 输出p、q、c</span><br><span class="hljs-built_in">print</span>(p, q, c)<br><br><span class="hljs-comment"># 下面是解密代码，当你配好所需要的python环境后，上网自行搜索RSA解密的步骤，补全代码进行解密</span><br>p = <span class="hljs-number">11272029161810989637077873599019496877008218675207504587156140192021377360482704022176035187554108368278190548694137066116291687848811218316609251992398531</span><br>q = <span class="hljs-number">8907273588185400007517004981004813156071713948292117095141121709405743482454098895087505262599398998351848699006495710441163005192326918043131527773275261</span><br>n = p*q<br>e = <span class="hljs-number">65537</span><br><br>d =<span class="hljs-number">86878502655260118864644922031588477057410536348819682235197775008566666793725177071665880121392724687843582788113205748413157483597543224904923252083988393307886889482606627681815785098540071203174556413083407356299373068894395628419702691762298577890184942379591377595895204260258458213890493837578458778073</span><br>c = <span class="hljs-number">59456089016060766225332390698350903116623033134514592830079717766948507914949032997169195220803642273910722815705790231122189278462009688705900558121892002228836045157732582528181395382772779860190430228823868911649968133987708461443646703064201375236983090379446718660629027030001866595377945046940440636896</span><br><span class="hljs-built_in">print</span>(long_to_bytes(<span class="hljs-built_in">pow</span>(c, d, n)))<br></code></pre></td></tr></table></figure>
+<p>安装好所对应的库之后，掏出我们的<br><img src="/photo/bas_rsa1.png" srcset="/img/loading.gif" lazyload><br>一个个输进去就能解出flag了<br>###X^2-RSA</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> Crypto.Util.number <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">import</span> gmpy2<br><br>p = getPrime(<span class="hljs-number">512</span>)<br>q = getPrime(<span class="hljs-number">512</span>)<br>e = getPrime(<span class="hljs-number">512</span>)<br>n = p*q<br>c = <span class="hljs-built_in">pow</span>(bytes_to_long(flag), e, n)<br>gift1 = p+q<br>gift2 = e**<span class="hljs-number">2</span> % p<br><br>n = <span class="hljs-number">119599732159422912237126092503633593127444912729791769936188025920440247693519660056564377003327876458608897540804699714727762677074095341934117636626737553788910255544086673845028462552403437563867021138226332533523261069120346290748100178821888057505879672808893138750370221354811388445573458187283950529329</span><br>c = <span class="hljs-number">26993320920246459282903918258141924700555534517795083322600888678032578078748098842182757614410623183383625789026194273160849599428611123639374938192451695449150144414006335708435850583611654329589400433382496740881780217929655022786322641976440238749489472351300088441838107888022748740774750642665176409512</span><br>gift1 = <span class="hljs-number">21880888517757890831027504308354774959604394643578725603877760598995238359425630435298497116759287279215040830436678520457866585439083039292573782745193150</span><br>gift2 = <span class="hljs-number">10396530748040666625822969282831155457018939705806203185375728535142910851038248041763489482743937736843953702379394388895553869400661190661679347693932652</span><br></code></pre></td></tr></table></figure>
+<p>代码如上<br>先算出p，q的值，根据p+q,q*q,写出py代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> sympy <span class="hljs-keyword">import</span> symbols, Eq, solve<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">calculate_p_q</span>(<span class="hljs-params">product, <span class="hljs-built_in">sum</span></span>):<br>    p, q = symbols(<span class="hljs-string">&#x27;p q&#x27;</span>)<br>    <span class="hljs-comment"># 设置方程</span><br>    eq1 = Eq(p*q, product)<br>    eq2 = Eq(p+q, <span class="hljs-built_in">sum</span>)<br>    <span class="hljs-comment"># 解方程</span><br>    solution = solve((eq1,eq2), (p, q))<br>    <span class="hljs-keyword">return</span> solution<br><br><span class="hljs-comment"># 已知的p*q和p+q的值</span><br>product = <span class="hljs-number">119599732159422912237126092503633593127444912729791769936188025920440247693519660056564377003327876458608897540804699714727762677074095341934117636626737553788910255544086673845028462552403437563867021138226332533523261069120346290748100178821888057505879672808893138750370221354811388445573458187283950529329</span>  <span class="hljs-comment"># 这是p*q的值</span><br><span class="hljs-built_in">sum</span> =<span class="hljs-number">21880888517757890831027504308354774959604394643578725603877760598995238359425630435298497116759287279215040830436678520457866585439083039292573782745193150</span>       <span class="hljs-comment"># 这是p+q的值</span><br><br>solution = calculate_p_q(product, <span class="hljs-built_in">sum</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;解: <span class="hljs-subst">&#123;solution&#125;</span>&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p>然后通过gift2和p算出e</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 定义一个函数，用扩展欧几里得算法求解线性同余方程</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">exgcd</span>(<span class="hljs-params">a, b</span>):<br>    <span class="hljs-keyword">if</span> b == <span class="hljs-number">0</span>:<br>        <span class="hljs-keyword">return</span> a, <span class="hljs-number">1</span>, <span class="hljs-number">0</span><br>    d, x, y = exgcd(b, a % b)<br>    <span class="hljs-keyword">return</span> d, y, x - (a // b) * y<br><br><span class="hljs-comment"># 输入x^2%p的值和p的值</span><br>r = <span class="hljs-built_in">int</span>(<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;请输入x^2%p的值：&quot;</span>))<br>p = <span class="hljs-built_in">int</span>(<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;请输入p的值：&quot;</span>))<br><br><span class="hljs-comment"># 判断r是否是p的二次剩余，即是否存在x满足x^2%p=r</span><br>d = exgcd(r, p)[<span class="hljs-number">0</span>] <span class="hljs-comment"># 求r和p的最大公约数</span><br><span class="hljs-keyword">if</span> d != <span class="hljs-number">1</span>: <span class="hljs-comment"># 如果r和p不互质，那么无解</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;无解&quot;</span>)<br><span class="hljs-keyword">else</span>: <span class="hljs-comment"># 如果r和p互质，那么有解</span><br>    <span class="hljs-comment"># 使用费马小定理求r的模p平方根，即x^2%p=r</span><br>    <span class="hljs-comment"># 费马小定理：如果a和p互质，那么a^(p-1)%p=1</span><br>    <span class="hljs-comment"># 令a=r，两边同时开方得到r^(p+1)/4%p=x或-x</span><br>    x = <span class="hljs-built_in">pow</span>(r, (p + <span class="hljs-number">1</span>) // <span class="hljs-number">4</span>, p) <span class="hljs-comment"># 使用pow函数快速求幂取模</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;一个可能的解是：&quot;</span>, x)<br></code></pre></td></tr></table></figure>
+<p>解出p q e后丢风二西里就能解出flag了</p>
+<blockquote>
+<p>####这就是我所做出的CRYPTO试题</p>
+</blockquote>
+<p>##MISC</p>
+<p>###快来签到吧！<br>一眼社会主义核心价值观加密，找网上工具就能解决了<br>###不许发电<br>用101editor打开(或者放linux里面)，用png.bt模板，发现ihdr的crc校验报错（放linux图片会打不开，因为linux也有crc校验），怀疑改了宽高，修改高后发现底部有一个二维码<br><img src="/photo/power.png" srcset="/img/loading.gif" lazyload><br>扫描完二维码就能获取到flag了(所以这题为什么300分)<br>##尊嘟假嘟<br>直接丢excel里面，然后按一下A1那个框就会停止跳动？(猜测出题人应该是想要让我们写个py程序，自动读取A1框的值，然后返回到A2,但不知道为什么点一下就会暂停。。)，使用时间暂停大法后，输入值，将返回值进行base64解密，从而获取flag(所以这题为什么300分)<br>###未经禁止，允许垂钓！<br>拿到图片，先修改高，成功获取一个fakeflag<br>之后丢进kali里用pngcheck,发现有zip压缩文件，提取出来得到<br><img src="/photo/chuidiao.png" srcset="/img/loading.gif" lazyload><br>打开fulage.txt发现<br><img src="/photo/chuidiao2.png" srcset="/img/loading.gif" lazyload><br>又是一个fakeflag<br>打开010editor,上面没什么问题，滑到最下面，<br><img src="/photo/chuidiao3.png" srcset="/img/loading.gif" lazyload><br><img src="/photo/chuidiao4.png" srcset="/img/loading.gif" lazyload><br>可以发现这是一张png图片，但是有些问题，观察标题和图片<br><img src="/photo/chuidioa5.png" srcset="/img/loading.gif" lazyload><br><img src="/photo/chuidiao6.png" srcset="/img/loading.gif" lazyload><br>发现读法就是加密的方式<br>于是编写个py脚本来解密</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">process_hex</span>(<span class="hljs-params">hex_string</span>):<br>    hex_list = hex_string.split()<br>    pairs = [hex_list[i:i+<span class="hljs-number">2</span>] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(hex_list), <span class="hljs-number">2</span>)]<br>    odd_pairs = pairs[::<span class="hljs-number">2</span>]<br>    even_pairs = pairs[<span class="hljs-number">1</span>::<span class="hljs-number">2</span>]<br>    <span class="hljs-keyword">return</span> odd_pairs + even_pairs<br><br>hex_string = <span class="hljs-string">&quot;00 49 00 00 45 4E 00 00 44 AE 00 00 42 60 00 00 82 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&quot;</span><br>pairs = process_hex(hex_string)<br><br>output = <span class="hljs-string">&#x27; &#x27;</span>.join([<span class="hljs-string">&#x27; &#x27;</span>.join(pair) <span class="hljs-keyword">for</span> pair <span class="hljs-keyword">in</span> pairs])<br><span class="hljs-built_in">print</span>(output)<br></code></pre></td></tr></table></figure>
+<p>PS；这玩意一次只能解密两行，然后一共有190行，你猜我按了几次ctrl CV?，所以说学会python是件好事(<br>将解密后的16进制码以16进制文件导入010editor保存为png得到<br><img src="/photo/chuidiao8.png" srcset="/img/loading.gif" lazyload><br>一眼base64,解码后就能得到flag了（）</p>
+<blockquote>
+<p>####这就是我做出来的misc试题</p>
+</blockquote>
+<p>##OSINT<br>###身在曹营心在汉<br>无意间在设计组群看到一个奇怪的名字(我是用电脑版qq看的，所以一眼就看到了)，点开就发现了flag<br>###CanCanWord<br>将照片导入手机相册，<br><img src="/photo/cancanneed.jpg" srcset="/img/loading.gif" lazyload><br>然后发现图片右下角的<br><img src="/photo/cancanneed2.png" srcset="/img/loading.gif" lazyload><br>猜测是从上海浦东国际机场到大连周水子国际机场的飞机，打开<a target="_blank" rel="noopener" href="https://www.flightaware.com/live/flight/CCD8954/history/20230826/0245Z/ZSPD/ZYTL">flightaware</a>根据时间和起飞将落地,找到对应航班<br><img src="/photo/cancanneed3.png" srcset="/img/loading.gif" lazyload><br>网上搜索不难知道，CA8954是波音737-800型，搜索大连航空飞机的座位表，结合图片，我们不难知道图片所拍摄的是紧急逃生出口，我们在紧急逃生出口的后一排，结合角度，判断出在19C的位置上</p>
+<blockquote>
+<p>####这就是我所做出的OSINT题目</p>
+</blockquote>
+<p>##GAME<br>###Crossy Road<br>简单地过马路(实际上是拼手速)，完成三条后，页面会提示我们魂斗罗的作弊码，我们在网页中输入上上下下左右左右ba后，页面会提示我们去控制台，这样我们就能获得第一条彩蛋碎片。<br>###Pacman<br>困难模式下胜利我们可以获得flag，简单模式下失败我们会获得第二条彩蛋碎片（其实在控制台里全都能直接看到），<br>看在我解出了三条彩蛋碎片的份上，能不能给我一些奖励(,sleephead里的彩蛋实在是找不到啊，翻了两三遍了。。</p>
+<blockquote>
+<p>####这就是我所做出的GAME试题</p>
+</blockquote>
+<blockquote>
+<p>以上，就是我在本次2023SSSCTF中做出的所有题目的的writeup了</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>2023SSSCTF WriteUp</div>
+      <div>https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 22, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/22/welcome/" title="wecome">
+                        <span class="hidden-mobile">wecome</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
