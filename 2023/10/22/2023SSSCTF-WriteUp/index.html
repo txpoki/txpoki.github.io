@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="2023SSSCTFのwrite upPWNtest your nc根据nc教程,下载并使用windows版nc，然后用powershell打开nc，键入’.&#x2F;ncat 地址 端口’，成功连接后，输入’cat &#x2F;flag’就能拿到flag了   Hack Traffic Light利用nc连接上服务器，按照题目要求随便输入几个数，然后观察输出的变化！，不难发现，三个十六">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://txpoki.github.io/test%5Cpublic%5C2023%5C10%5C22%5C2023SSSCTF-WriteUp%5Cdefault.png">
+<meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/public/2023/10/22/2023SSSCTF-WriteUp/default.png">
 <meta property="og:image" content="https://upload.cc/i1/2023/10/23/SBvKZw.png">
 <meta property="og:image" content="https://upload.cc/i1/2023/10/23/PUs0jl.png">
 <meta property="og:image" content="https://upload.cc/i1/2023/10/23/eT748j.png">
@@ -52,11 +52,11 @@
 <meta property="og:image" content="https://upload.cc/i1/2023/10/23/WcbuGF.png">
 <meta property="og:image" content="https://upload.cc/i1/2023/10/23/9gzXaI.png">
 <meta property="article:published_time" content="2023-10-22T05:18:11.000Z">
-<meta property="article:modified_time" content="2023-10-23T03:33:18.071Z">
+<meta property="article:modified_time" content="2023-10-23T03:44:17.809Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://txpoki.github.io/test%5Cpublic%5C2023%5C10%5C22%5C2023SSSCTF-WriteUp%5Cdefault.png">
+<meta name="twitter:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/public/2023/10/22/2023SSSCTF-WriteUp/default.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -332,12 +332,12 @@
             
               <div class="markdown-body">
                 
-                <meta name="referrer" content="no-referrer" />
+                <meta name="referrer" content="no-referrer">
 
 
 
 <h1 id="2023SSSCTFのwrite-up"><a href="#2023SSSCTFのwrite-up" class="headerlink" title="2023SSSCTFのwrite up"></a>2023SSSCTFのwrite up</h1><h2 id="PWN"><a href="#PWN" class="headerlink" title="PWN"></a>PWN</h2><h3 id="test-your-nc"><a href="#test-your-nc" class="headerlink" title="test your nc"></a>test your nc</h3><p>根据<a target="_blank" rel="noopener" href="https://loora1n.github.io/2022/09/13/nc%20%E6%98%AF:%E4%BB%80%E4%B9%88/">nc教程</a>,下载并使用windows版nc，然后用powershell打开nc，键入’.&#x2F;ncat 地址 端口’，成功连接后，输入’cat &#x2F;flag’就能拿到flag了  </p>
-<h3 id="Hack-Traffic-Light"><a href="#Hack-Traffic-Light" class="headerlink" title="Hack Traffic Light"></a>Hack Traffic Light</h3><p>利用nc连接上服务器，<br><img src="/test%5Cpublic%5C2023%5C10%5C22%5C2023SSSCTF-WriteUp%5Cdefault.png" srcset="/img/loading.gif" lazyload><br>按照题目要求随便输入几个数，然后观察输出的变化！，不难发现，三个十六进制数中，第一个数字与第三个数字所对应的秒数互换了，所以我们只要将题目要求的秒数转换成十六进制，并交换一三位再输入，就能得到flag了！  </p>
+<h3 id="Hack-Traffic-Light"><a href="#Hack-Traffic-Light" class="headerlink" title="Hack Traffic Light"></a>Hack Traffic Light</h3><p>利用nc连接上服务器，<br><img src="/2023/10/22/2023SSSCTF-WriteUp/public/2023/10/22/2023SSSCTF-WriteUp/default.png" srcset="/img/loading.gif" lazyload><br>按照题目要求随便输入几个数，然后观察输出的变化！，不难发现，三个十六进制数中，第一个数字与第三个数字所对应的秒数互换了，所以我们只要将题目要求的秒数转换成十六进制，并交换一三位再输入，就能得到flag了！  </p>
 <h3 id="strange-graphic"><a href="#strange-graphic" class="headerlink" title="strange graphic"></a>strange graphic</h3><p>利用nc连接上服务器，根据题目，我们不难猜测出这道题目要利用c语言中整形变量数据溢出的漏洞，因此我们只需要构造特定的数，来满足题目条件</p>
 <ol>
 <li>第一小题，他们的和的两倍小于题目要求的，所以我们只需要让结果超出2147483648，让其为一个负数就行了  </li>
