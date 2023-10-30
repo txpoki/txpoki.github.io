@@ -24,20 +24,20 @@
 <meta property="og:description" content="2023SSSCTFのwrite upPWNtest your nc根据nc教程,下载并使用windows版nc，然后用powershell打开nc，键入’.&#x2F;ncat 地址 端口’，成功连接后，输入’cat &#x2F;flag’就能拿到flag了   Hack Traffic Light利用nc连接上服务器，按照题目要求随便输入几个数，然后观察输出的变化！，不难发现，三个十六进制">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/hardtriffic1.png">
-<meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/strange1.png">
+<meta property="og:image" content="https://s2.loli.net/2023/10/30/Bh9FsZxMqiyzPrp.png">
 <meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/caokongjiami1.png">
 <meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/ezphp1.png">
-<meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/Snipaste_2023-10-12_19-37-31.png">
+<meta property="og:image" content="https://s2.loli.net/2023/10/30/NaWT3DwQLjlBYiZ.png">
 <meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/info1.png">
-<meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/yuansql.png">
+<meta property="og:image" content="https://s2.loli.net/2023/10/30/6FcJXn3mI2AP94a.png">
 <meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/ezphp2.png">
 <meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/ezphp2_2.png">
-<meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/sleephead1.png">
+<meta property="og:image" content="https://s2.loli.net/2023/10/30/ZkToDJvfjXmgirU.png">
 <meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/sleep2.png">
-<meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/sleep3.png">
-<meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/sleep4.png">
-<meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/sleep5.png">
-<meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/sleep6.png">
+<meta property="og:image" content="https://s2.loli.net/2023/10/30/2xsFjQndlK1pC8L.png">
+<meta property="og:image" content="https://s2.loli.net/2023/10/30/oZfMIbXTQV8z67U.png">
+<meta property="og:image" content="https://s2.loli.net/2023/10/30/Obda3TMzwrGpWhn.png">
+<meta property="og:image" content="https://s2.loli.net/2023/10/30/ny1YkJIDGctvAUE.png">
 <meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/phase7.png">
 <meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/bas_rsa1.png">
 <meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/power.png">
@@ -52,7 +52,7 @@
 <meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/cancanneed2.png">
 <meta property="og:image" content="https://txpoki.github.io/2023/10/22/2023SSSCTF-WriteUp/cancanneed3.png">
 <meta property="article:published_time" content="2023-10-22T05:18:11.000Z">
-<meta property="article:modified_time" content="2023-10-23T04:22:18.523Z">
+<meta property="article:modified_time" content="2023-10-30T08:12:08.850Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -324,7 +324,7 @@
               <p class="note note-info">
                 
                   
-                    Last updated on October 23, 2023 pm
+                    Last updated on October 30, 2023 pm
                   
                 
               </p>
@@ -340,14 +340,14 @@
 <ol>
 <li>第一小题，他们的和的两倍小于题目要求的，所以我们只需要让结果超出2147483648，让其为一个负数就行了  </li>
 <li>第二小题也是这样，不过构造起来麻烦一点(其实是我忘了，我记忆中好像是构造了一个结果超过了两倍的2147483648的数，让他溢出后变成了一个小正数9，满足题目要求) 然后这里利用了网上的一个分解整数的软件，链接就不放了，网上蛮多的</li>
-<li>第三部分输入-1和2147483648就行了，下面放图片<br><img src="/2023/10/22/2023SSSCTF-WriteUp/strange1.png" srcset="/img/loading.gif" lazyload></li>
+<li>第三部分输入-1和2147483648就行了，下面放图片<br><img src="https://s2.loli.net/2023/10/30/Bh9FsZxMqiyzPrp.png" srcset="/img/loading.gif" lazyload alt="strange1.png"></li>
 </ol>
 <h3 id="这就是我所做出pwn试题"><a href="#这就是我所做出pwn试题" class="headerlink" title="这就是我所做出pwn试题"></a>这就是我所做出pwn试题</h3><h2 id="REVERSE"><a href="#REVERSE" class="headerlink" title="REVERSE"></a>REVERSE</h2><h3 id="操控加密"><a href="#操控加密" class="headerlink" title="操控加密"></a>操控加密</h3><p>题目给了我们一串密文和一个用来加密的程序，输入字符便能给我们返回加密后的数据，<br><img src="/2023/10/22/2023SSSCTF-WriteUp/caokongjiami1.png" srcset="/img/loading.gif" lazyload><br>根据flag的开头，然后把键盘上<br>个字母的大小写和数字输进去，然后人肉破解(解密是真不会啊)，这样我们就能得到flag了</p>
-<h4 id="这就是我所做出REVERSE试题"><a href="#这就是我所做出REVERSE试题" class="headerlink" title="这就是我所做出REVERSE试题"></a>这就是我所做出REVERSE试题</h4><h2 id="WEB"><a href="#WEB" class="headerlink" title="WEB"></a>WEB</h2><h3 id="ezphp"><a href="#ezphp" class="headerlink" title="ezphp"></a>ezphp</h3><p>题目给了我们一个网站,我们打开网页源代码可以看见这样一行提示<img src="/2023/10/22/2023SSSCTF-WriteUp/ezphp1.png" srcset="/img/loading.gif" lazyload><br>将getflag.php输入到url后面，我们可以进录到一个新的页面，打开源码，有以下信息<img src="/2023/10/22/2023SSSCTF-WriteUp/Snipaste_2023-10-12_19-37-31.png" srcset="/img/loading.gif" lazyload>这明显是想要提示我们利用get传参的办法，于是加入?DLUT&#x3D;2023SSSCTF，成功获取flag.<br>另外，进入网页的robots.txt文件我们还能获取到彩蛋的最后一个碎片</p>
+<h4 id="这就是我所做出REVERSE试题"><a href="#这就是我所做出REVERSE试题" class="headerlink" title="这就是我所做出REVERSE试题"></a>这就是我所做出REVERSE试题</h4><h2 id="WEB"><a href="#WEB" class="headerlink" title="WEB"></a>WEB</h2><h3 id="ezphp"><a href="#ezphp" class="headerlink" title="ezphp"></a>ezphp</h3><p>题目给了我们一个网站,我们打开网页源代码可以看见这样一行提示<img src="/2023/10/22/2023SSSCTF-WriteUp/ezphp1.png" srcset="/img/loading.gif" lazyload><br>将getflag.php输入到url后面，我们可以进录到一个新的页面，打开源码，有以下信息<img src="https://s2.loli.net/2023/10/30/NaWT3DwQLjlBYiZ.png" srcset="/img/loading.gif" lazyload alt="Snipaste_2023-10-12_19-37-31.png">这明显是想要提示我们利用get传参的办法，于是加入?DLUT&#x3D;2023SSSCTF，成功获取flag.<br>另外，进入网页的robots.txt文件我们还能获取到彩蛋的最后一个碎片</p>
 <h3 id="INFO-SELECTION"><a href="#INFO-SELECTION" class="headerlink" title="INFO SELECTION"></a>INFO SELECTION</h3><p>一进到网页网页提示说不会让我们获取源码，我们点击f12,检查源码，可以发现hint<br><img src="/2023/10/22/2023SSSCTF-WriteUp/info1.png" srcset="/img/loading.gif" lazyload><br>提示我们敏感文件都有哪些，我们不难想到flag可能藏在如roobots.txt <a target="_blank" rel="noopener" href="http://www.zip/">www.zip</a> 备份（其实是我忘记了第三个是什么貌似是一个.bak文件?）等文件中，在URL中加上这些我们就能够获取到flag的三个碎片，从而得到正确的flag了</p>
-<h3 id="YuanのSQL"><a href="#YuanのSQL" class="headerlink" title="YuanのSQL"></a>YuanのSQL</h3><p>进入网站(我超，原)，观察到网站下方的提示，不难想到这是一个有关于sql注入的题目<br><img src="/2023/10/22/2023SSSCTF-WriteUp/yuansql.png" srcset="/img/loading.gif" lazyload><br>不难发现php语句中缺少了引号，键入数值为1的id时，我们获取到了“scr1w”,当键入的数值为2时，我们就成功获取到了flag（具体流程给忘了，所以说的有点不清楚，但大致流程确实是这样的）</p>
+<h3 id="YuanのSQL"><a href="#YuanのSQL" class="headerlink" title="YuanのSQL"></a>YuanのSQL</h3><p>进入网站(我超，原)，观察到网站下方的提示，不难想到这是一个有关于sql注入的题目<br><img src="https://s2.loli.net/2023/10/30/6FcJXn3mI2AP94a.png" srcset="/img/loading.gif" lazyload alt="yuansql.png"><br>不难发现php语句中缺少了引号，键入数值为1的id时，我们获取到了“scr1w”,当键入的数值为2时，我们就成功获取到了flag（具体流程给忘了，所以说的有点不清楚，但大致流程确实是这样的)</p>
 <h3 id="ezphp2-0"><a href="#ezphp2-0" class="headerlink" title="ezphp2.0"></a>ezphp2.0</h3><p>进入网页后我们能看见网页给的php代码<br><img src="/2023/10/22/2023SSSCTF-WriteUp/ezphp2.png" srcset="/img/loading.gif" lazyload><br>阅读代码我们不难知道我们首先要让’DLUT&#x3D;A306’成立，代码中要求WEB1不等于WEB2但都要等于114514，而”&#x3D;&#x3D;”为弱相等，我们便可以将他们分别等于114514a于114514b,以get传参后出现<br><img src="/2023/10/22/2023SSSCTF-WriteUp/ezphp2_2.png" srcset="/img/loading.gif" lazyload><br>根据弹出的内容，我们可知这有关php伪协议，且经测试flag.php中的flag不能直接获得，所以要经base64编码后获得,满足这两条后，我们构造payload<br><code>http://210.30.97.133:10009/?DLUT=A306&amp;WEB1=114514a&amp;WEB2=114514b&amp;file=php://filter/convert.base64-encode/resource=flag.php</code><br>获取base64编码后的内容<br><code>T0hISEhISEhISEhISCEKWW91IEp1c3QgR2V0IFRoZSBGbGFnISEhIQpTbyBOZXdCZWUh4pSAPeKJoc6jKCgo44Gk4oCizIDPieKAosyBKeOBpOKUgD3iiaHOoygoKOOBpOKAosyAz4nigKLMgSnjgaTilIA94omhzqMoKCjjgaTigKLMgM+J4oCizIEp44GkClRoaXMgaXMgdGhlIGZsYWc6Cjw/cGhwCiRGTEFHID0gJ2ZsYWd7ZDczYmE2ZmItZWJjMC00MWYxLWE3MGYtY2MwOWRlMjlhMjNmfSc7Cj8+</code><br>再解码就能获得flag了</p>
-<h3 id="SleepyHead"><a href="#SleepyHead" class="headerlink" title="SleepyHead"></a>SleepyHead</h3><p>进入网页，看见有关使用浏览器的信息<br><img src="/2023/10/22/2023SSSCTF-WriteUp/sleephead1.png" srcset="/img/loading.gif" lazyload><br>猜测可能与http headers的修改有关，于是拖进burpsuite中查看，将浏览器改为Scr1w后变为：<br><img src="/2023/10/22/2023SSSCTF-WriteUp/sleep2.png" srcset="/img/loading.gif" lazyload><br>加上Referer:Scr1w.Studio<br><img src="/2023/10/22/2023SSSCTF-WriteUp/sleep3.png" srcset="/img/loading.gif" lazyload><br>加上DNT:1变成：<br><img src="/2023/10/22/2023SSSCTF-WriteUp/sleep4.png" srcset="/img/loading.gif" lazyload><br>加上via:claaaaash.mono<br><img src="/2023/10/22/2023SSSCTF-WriteUp/sleep5.png" srcset="/img/loading.gif" lazyload><br>加上X-Forwarded-For:127.0.0.1<br><img src="/2023/10/22/2023SSSCTF-WriteUp/sleep6.png" srcset="/img/loading.gif" lazyload><br>成功获取flag，<br><img src="/2023/10/22/2023SSSCTF-WriteUp/phase7.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="SleepyHead"><a href="#SleepyHead" class="headerlink" title="SleepyHead"></a>SleepyHead</h3><p>进入网页，看见有关使用浏览器的信息<br><img src="https://s2.loli.net/2023/10/30/ZkToDJvfjXmgirU.png" srcset="/img/loading.gif" lazyload alt="sleephead1.png"><br>猜测可能与http headers的修改有关，于是拖进burpsuite中查看，将浏览器改为Scr1w后变为：<br><img src="/2023/10/22/2023SSSCTF-WriteUp/sleep2.png" srcset="/img/loading.gif" lazyload><br>加上Referer:Scr1w.Studio<br><img src="https://s2.loli.net/2023/10/30/2xsFjQndlK1pC8L.png" srcset="/img/loading.gif" lazyload alt="sleep3.png"><br>加上DNT:1变成：<br><img src="https://s2.loli.net/2023/10/30/oZfMIbXTQV8z67U.png" srcset="/img/loading.gif" lazyload alt="sleep4.png"><br>加上via:claaaaash.mono<br><img src="https://s2.loli.net/2023/10/30/Obda3TMzwrGpWhn.png" srcset="/img/loading.gif" lazyload alt="sleep5.png"><br>加上X-Forwarded-For:127.0.0.1<br><img src="https://s2.loli.net/2023/10/30/ny1YkJIDGctvAUE.png" srcset="/img/loading.gif" lazyload alt="sleep6.png"><br>成功获取flag，<br><img src="/2023/10/22/2023SSSCTF-WriteUp/phase7.png" srcset="/img/loading.gif" lazyload></p>
 <h4 id="这就是我所做出的WEB试题"><a href="#这就是我所做出的WEB试题" class="headerlink" title="这就是我所做出的WEB试题"></a>这就是我所做出的WEB试题</h4><h2 id="CRYPTO"><a href="#CRYPTO" class="headerlink" title="CRYPTO"></a>CRYPTO</h2><h3 id="等比数列"><a href="#等比数列" class="headerlink" title="等比数列?"></a>等比数列?</h3><p>根据题目的代码</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> Crypto.Util.number <span class="hljs-keyword">import</span> *<br>a0 =<br>q =????<br>n = <span class="hljs-number">710009</span><br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>):<br>    a = a0*q % n<br>    a0 = a<br>    <span class="hljs-keyword">if</span> i == <span class="hljs-number">30</span>:<br>        <span class="hljs-built_in">print</span>(a)<br>    <span class="hljs-keyword">if</span> i == <span class="hljs-number">66</span>:<br>        <span class="hljs-built_in">print</span>(a)<br><span class="hljs-comment"># 338473</span><br><span class="hljs-comment"># 519563</span><br></code></pre></td></tr></table></figure>
 <p>可写出这样一个代码(实际上是GPT写的),</p>
@@ -436,7 +436,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Updated on</div>
-          <div>October 23, 2023</div>
+          <div>October 30, 2023</div>
         </div>
       
       
