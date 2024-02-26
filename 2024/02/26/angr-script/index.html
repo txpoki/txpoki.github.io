@@ -24,7 +24,7 @@
 <meta property="og:description" content="施工中1234567891011121314151617181920212223import angr, monkeyhex, claripyproj &#x3D; angr.Project(&amp;#x27;t&#x2F;main.exe&amp;#x27;)flag_chars &#x3D; [claripy.BVS(&amp;#x27;flag_%d&amp;#x27; % i, 8) for i in range(32)]flag &#x3D; clarip">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-02-26T08:53:08.000Z">
-<meta property="article:modified_time" content="2024-02-26T08:57:07.844Z">
+<meta property="article:modified_time" content="2024-02-26T09:02:52.877Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -261,7 +261,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          699 words
+          1.5k words
         
       </span>
     
@@ -272,7 +272,7 @@
         
         
         
-          6 mins
+          13 mins
         
       </span>
     
@@ -331,6 +331,8 @@
               <div class="markdown-body">
                 
                 <h2 id="施工中"><a href="#施工中" class="headerlink" title="施工中"></a>施工中</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> angr, monkeyhex, claripy<br>proj = angr.Project(<span class="hljs-string">&#x27;t/main.exe&#x27;</span>)<br>flag_chars = [claripy.BVS(<span class="hljs-string">&#x27;flag_%d&#x27;</span> % i, <span class="hljs-number">8</span>) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">32</span>)]<br>flag = claripy.Concat(*[claripy.BVV(<span class="hljs-string">b&#x27;flag&#123;&#x27;</span>)]+flag_chars+[claripy.BVV(<span class="hljs-string">b&#x27;&#125;\x00&#x27;</span>)])<br>state = proj.factory.call_state(<span class="hljs-number">0x140001000</span>)<br>input_addr = <span class="hljs-number">0</span><br><br><span class="hljs-meta">@proj.hook(<span class="hljs-params"><span class="hljs-number">0x140001093</span>, length=<span class="hljs-number">5</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_input</span>(<span class="hljs-params">state</span>):<br>    <span class="hljs-keyword">global</span> input_addr<br>    input_addr = state.regs.rdx<br>    state.memory.store(input_addr,flag)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Input done&#x27;</span>)<br><br><span class="hljs-meta">@proj.hook(<span class="hljs-params"><span class="hljs-number">0x140001079</span>, length=<span class="hljs-number">5</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">printf</span>(<span class="hljs-params">state</span>):<br>        <span class="hljs-keyword">return</span><br><br>simgr = proj.factory.simgr(state)<br>simgr.explore(find=<span class="hljs-number">0x1400013A1</span>, avoid=<span class="hljs-number">0x1400013B7</span>)<br>x=simgr.found[<span class="hljs-number">0</span>].solver.<span class="hljs-built_in">eval</span>(flag).to_bytes(<span class="hljs-number">39</span>,<span class="hljs-string">&quot;big&quot;</span>)<br><span class="hljs-built_in">print</span>(x)<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> angr<br><span class="hljs-keyword">import</span> sys<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">is_successful</span>(<span class="hljs-params">state</span>):<br>    stdout_output = state.posix.dumps(sys.stdout.fileno())<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">b&#x27;Right!&#x27;</span> <span class="hljs-keyword">in</span> stdout_output<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">should_abort</span>(<span class="hljs-params">state</span>):<br>    stdout_output = state.posix.dumps(sys.stdout.fileno())<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">b&#x27;Wrong!&#x27;</span> <span class="hljs-keyword">in</span> stdout_output<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">argv</span>):<br>    path_to_binary = <span class="hljs-string">&#x27;./ezRE2&#x27;</span>  <span class="hljs-comment"># :string</span><br>    project = angr.Project(path_to_binary,load_options=&#123;<span class="hljs-string">&quot;auto_load_libs&quot;</span>: <span class="hljs-literal">False</span>&#125;)<br>    initial_state = project.factory.entry_state()<br>    simulation = project.factory.simgr(initial_state)<br>    simulation.explore(find=is_successful,avoid=should_abort)<br>    <span class="hljs-keyword">if</span> simulation.found:<br>        solution_state = simulation.found[<span class="hljs-number">0</span>]<br>        <span class="hljs-built_in">print</span>(solution_state.posix.dumps(<span class="hljs-number">0</span>))<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">&#x27;Could not find the solution&#x27;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    main(sys.argv)<br></code></pre></td></tr></table></figure>
                 
               </div>
             
