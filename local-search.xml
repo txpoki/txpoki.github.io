@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>ida_script</title>
+    <link href="/2024/03/04/ida-script/"/>
+    <url>/2024/03/04/ida-script/</url>
+    
+    <content type="html"><![CDATA[<h2 id="施工中"><a href="#施工中" class="headerlink" title="施工中"></a>施工中</h2><p>常用的库: </p><ol><li>idc 封装IDA与IDC函数的兼容性模块 </li><li>idaapi 允许我们访问更加底层的数据</li><li>Idautils IDA提供给我们的一个高级实用的模块<br>idaapi.get_func(ea)：获取地址 ea 所在的函数的范围和信息1<br>idautils.FuncItems(ea)：获取地址 ea 所在的函数的所有指令地址的迭代器2<br>idc.get_wide_byte(ea)：获取地址 ea 处的字节值3<br>idc.get_wide_word(ea)：获取地址 ea 处的字值3<br>idc.get_wide_dword(ea)：获取地址 ea 处的双字值3<br>idc.get_qword(ea)：获取地址 ea 处的四字值3<br>idc.get_bytes(ea, size)：获取地址 ea 开始的 size 个字节的数据<br>idc.get_name(ea, flags)：获取地址 ea 处的符号名，flags 参数可以指定不同的命名类型5<br>idc.get_func_name(ea)：获取地址 ea 所在的函数名6<br>idc.get_segm_name(ea)：获取地址 ea 所在的段名<br>idc.get_struc_name(sid)：获取结构体 id 的名称<br>idc.get_member_name(sid, offset)：获取结构体 id 中偏移量为 offset 的成员的名称</li></ol><p>idc.patch_byte(addr,data) 更改对应地址的值<br>idaapi.dbg_read_memory(addr , addr) 它可以接受一个地址和一个长度作为参数，然后返回一个字节序列，表示从该地址开始的内存数据。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>CTF</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>frida_script</title>
     <link href="/2024/02/27/frida-script/"/>
     <url>/2024/02/27/frida-script/</url>
