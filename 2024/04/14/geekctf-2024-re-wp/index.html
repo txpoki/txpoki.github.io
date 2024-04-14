@@ -1,0 +1,750 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/tuxiang.jpg">
+  <link rel="icon" href="/img/tuxiang.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="geekctf 2024 re wplucknumber分析rust代码并结合动调可知，输入的number1 和number2分别进行siphaash后在进行一段加密后比较，实际动调测试后发现在进行第一次siphash时，是在有7个字节的number1最前面加上0xFF再进行siphash，number2是直接进行siphash，所以只要七位的number1+0xFF&lt;&lt;56 &amp;#x3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="geekctf 2024 re wp">
+<meta property="og:url" content="https://txpoki.github.io/2024/04/14/geekctf-2024-re-wp/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="geekctf 2024 re wplucknumber分析rust代码并结合动调可知，输入的number1 和number2分别进行siphaash后在进行一段加密后比较，实际动调测试后发现在进行第一次siphash时，是在有7个字节的number1最前面加上0xFF再进行siphash，number2是直接进行siphash，所以只要七位的number1+0xFF&lt;&lt;56 &amp;#x3">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2024/04/14/OTA4VDrwU7KhPd8.png">
+<meta property="og:image" content="https://s2.loli.net/2024/04/14/hwngrFOEJLjmtDz.png">
+<meta property="article:published_time" content="2024-04-14T15:06:31.000Z">
+<meta property="article:modified_time" content="2024-04-14T15:07:49.270Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="CTF">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2024/04/14/OTA4VDrwU7KhPd8.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>geekctf 2024 re wp - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"txpoki.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Txp0k1&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>主页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>档案</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>目录</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/94219701_p0.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="geekctf 2024 re wp"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-04-14 23:06" pubdate>
+          April 14, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          15k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          125 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">geekctf 2024 re wp</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    Last updated on April 14, 2024 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="geekctf-2024-re-wp"><a href="#geekctf-2024-re-wp" class="headerlink" title="geekctf 2024 re wp"></a>geekctf 2024 re wp</h1><h2 id="lucknumber"><a href="#lucknumber" class="headerlink" title="lucknumber"></a>lucknumber</h2><p>分析rust代码并结合动调可知，输入的number1 和number2分别进行siphaash后在进行一段加密后比较，实际动调测试后发现在进行第一次siphash时，是在有7个字节的number1最前面加上0xFF再进行siphash，number2是直接进行siphash，所以只要七位的number1+0xFF&lt;&lt;56 &#x3D;&#x3D; number2 即可满足最后相等的条件.</p>
+<h2 id="Peer-Trace"><a href="#Peer-Trace" class="headerlink" title="Peer-Trace"></a>Peer-Trace</h2><p>简单的双进程,这里贴一下解密代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">swap</span>(<span class="hljs-params">a, b</span>):<br>    <span class="hljs-keyword">return</span> b, a<br><br>str1 = <span class="hljs-built_in">list</span>(<span class="hljs-string">&quot;flag&#123;123aaaaavaaaaahabhhhhaaaaaaaaajaaaaaaaa456&#125;&quot;</span>)<br>list1 = [<span class="hljs-number">0x40</span>, <span class="hljs-number">0x3F</span>, <span class="hljs-number">0x31</span>, <span class="hljs-number">0x94</span>, <span class="hljs-number">0x69</span>, <span class="hljs-number">0x3E</span>, <span class="hljs-number">0x9C</span>, <span class="hljs-number">0xA3</span>,<span class="hljs-number">0x60</span>, <span class="hljs-number">0x9B</span>, <span class="hljs-number">0x5B</span>, <span class="hljs-number">0x56</span>, <span class="hljs-number">0x70</span>, <span class="hljs-number">0x24</span>, <span class="hljs-number">0x87</span>, <span class="hljs-number">0x17</span>,<span class="hljs-number">0x68</span>, <span class="hljs-number">0xCA</span>, <span class="hljs-number">0x97</span>, <span class="hljs-number">0xBA</span>, <span class="hljs-number">0xAA</span>, <span class="hljs-number">0x18</span>, <span class="hljs-number">0xA9</span>, <span class="hljs-number">0x11</span>,<span class="hljs-number">0xB0</span>, <span class="hljs-number">0xD3</span>, <span class="hljs-number">0x3D</span>, <span class="hljs-number">0x9B</span>, <span class="hljs-number">0xAB</span>, <span class="hljs-number">0xB0</span>, <span class="hljs-number">0xF1</span>, <span class="hljs-number">0xB8</span>,<span class="hljs-number">0xE4</span>, <span class="hljs-number">0x35</span>, <span class="hljs-number">0x18</span>, <span class="hljs-number">0x6A</span>, <span class="hljs-number">0xFB</span>, <span class="hljs-number">0x49</span>, <span class="hljs-number">0x87</span>, <span class="hljs-number">0x48</span>,<span class="hljs-number">0x58</span>, <span class="hljs-number">0x81</span>, <span class="hljs-number">0xE9</span>, <span class="hljs-number">0x8F</span>, <span class="hljs-number">0xF7</span>, <span class="hljs-number">0x26</span>, <span class="hljs-number">0x29</span>, <span class="hljs-number">0x08</span>]<br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-number">48</span>, <span class="hljs-number">8</span>):<br>    str1[i], str1[i+<span class="hljs-number">5</span>] = swap(str1[i], str1[i+<span class="hljs-number">5</span>])<br>    str1[i+<span class="hljs-number">1</span>], str1[i+<span class="hljs-number">7</span>] = swap(str1[i+<span class="hljs-number">1</span>], str1[i+<span class="hljs-number">7</span>])<br>    str1[i+<span class="hljs-number">2</span>], str1[i+<span class="hljs-number">6</span>] = swap(str1[i+<span class="hljs-number">2</span>], str1[i+<span class="hljs-number">6</span>])<br>    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-number">8</span>):<br>        str1[i+j] = <span class="hljs-built_in">chr</span>((<span class="hljs-built_in">ord</span>(str1[i+j]) - i - j))<br>    str1[i+<span class="hljs-number">3</span>], str1[i+<span class="hljs-number">4</span>] = swap(str1[i+<span class="hljs-number">3</span>], str1[i+<span class="hljs-number">4</span>])<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;&#x27;</span>.join(str1))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;&#x27;</span>.join([<span class="hljs-built_in">chr</span>(<span class="hljs-built_in">ord</span>(i) ^ <span class="hljs-number">0x28</span> )<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> str1]))<br><span class="hljs-built_in">print</span>([<span class="hljs-built_in">hex</span>(<span class="hljs-built_in">ord</span>(i) ^ <span class="hljs-number">0x28</span>) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> str1])<br><span class="hljs-built_in">print</span>([<span class="hljs-built_in">hex</span>(((<span class="hljs-built_in">ord</span>(str1[i]) ^ <span class="hljs-number">0x28</span>) + list1[i])&amp; <span class="hljs-number">0xff</span>)  <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>,<span class="hljs-number">48</span>)])<br><span class="hljs-built_in">print</span>([((<span class="hljs-built_in">ord</span>(str1[i]) ^ <span class="hljs-number">0x28</span>) + list1[i])&amp; <span class="hljs-number">0xff</span>  <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>,<span class="hljs-number">48</span>)])<br>list2 = [<span class="hljs-number">0x9C</span>, <span class="hljs-number">0x56</span>, <span class="hljs-number">0x89</span>, <span class="hljs-number">0xF3</span>, <span class="hljs-number">0xB5</span>, <span class="hljs-number">0x87</span>, <span class="hljs-number">0x0F</span>, <span class="hljs-number">0xF0</span>, <span class="hljs-number">0xD1</span>, <span class="hljs-number">0x9B</span>, <span class="hljs-number">0x6C</span>, <span class="hljs-number">0xA4</span>, <span class="hljs-number">0xD1</span>, <span class="hljs-number">0xA2</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x35</span>, <span class="hljs-number">0x81</span>, <span class="hljs-number">0xD4</span>, <span class="hljs-number">0xB0</span>, <span class="hljs-number">0x30</span>, <span class="hljs-number">0xF3</span>, <span class="hljs-number">0x89</span>, <span class="hljs-number">0x0A</span>, <span class="hljs-number">0x89</span>, <span class="hljs-number">0x13</span>, <span class="hljs-number">0x45</span>, <span class="hljs-number">0xA0</span>, <span class="hljs-number">0x08</span>, <span class="hljs-number">0xCA</span>, <span class="hljs-number">0x1F</span>, <span class="hljs-number">0x0F</span>, <span class="hljs-number">0x20</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x4F</span>, <span class="hljs-number">0x56</span>, <span class="hljs-number">0x81</span>, <span class="hljs-number">0x03</span>, <span class="hljs-number">0x5B</span>, <span class="hljs-number">0xAB</span>, <span class="hljs-number">0xC3</span>, <span class="hljs-number">0xC7</span>, <span class="hljs-number">0xFD</span>, <span class="hljs-number">0x57</span>, <span class="hljs-number">0xBB</span>, <span class="hljs-number">0x09</span>, <span class="hljs-number">0x3B</span>, <span class="hljs-number">0x95</span>, <span class="hljs-number">0x08</span>]<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>,<span class="hljs-number">48</span>) :<br>    list2[i] = ((list2[i] - list1[i]) ^<span class="hljs-number">0x28</span>)&amp; <span class="hljs-number">0xff</span><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-number">48</span>, <span class="hljs-number">8</span>):<br>    list2[i+<span class="hljs-number">3</span>], list2[i+<span class="hljs-number">4</span>] = swap(list2[i+<span class="hljs-number">3</span>], list2[i+<span class="hljs-number">4</span>])<br>    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-number">8</span>):<br>        list2[i+j] = list2[i+j] + i + j<br>    list2[i+<span class="hljs-number">2</span>], list2[i+<span class="hljs-number">6</span>] = swap(list2[i+<span class="hljs-number">2</span>], list2[i+<span class="hljs-number">6</span>])<br>    list2[i+<span class="hljs-number">1</span>], list2[i+<span class="hljs-number">7</span>] = swap(list2[i+<span class="hljs-number">1</span>], list2[i+<span class="hljs-number">7</span>])<br>    list2[i], list2[i+<span class="hljs-number">5</span>] = swap(list2[i], list2[i+<span class="hljs-number">5</span>])<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;&#x27;</span>.join([<span class="hljs-built_in">chr</span>(i &amp;<span class="hljs-number">0xff</span>)<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> list2]))<br><span class="hljs-comment">#flag&#123;falaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</span><br></code></pre></td></tr></table></figure>
+<h2 id="TeeWorlds-Door"><a href="#TeeWorlds-Door" class="headerlink" title="TeeWorlds-Door"></a>TeeWorlds-Door</h2><p>分析.patch补丁文件可知,添加了服务器指令”hackers’_echo_cmd”</p>
+<figure class="highlight patch"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs patch"><span class="hljs-addition">+void CServer::MyEcho(const char *pText)</span><br><span class="hljs-addition">+&#123;</span><br><span class="hljs-addition">+	Console()-&gt;Print(IConsole::OUTPUT_LEVEL_STANDARD, &quot;server&quot;, pT	ext);</span><br><span class="hljs-addition">+&#125;</span><br><span class="hljs-addition">+</span><br> int64 CServer::TickStartTime(int Tick)<br> &#123;<br> 	return m_GameStartTime + (time_freq()*Tick)/SERVER_TICK_SPEED;<br><span class="hljs-meta">@@ -1536,6 +1541,11 @@</span> void CServer::ConKick(IConsole::IResult *pResult, void *pUser)<br> 		((CServer *)pUser)-&gt;Kick(pResult-&gt;GetInteger(0), &quot;Kicked by console&quot;);<br> &#125;<br> <br><span class="hljs-addition">+void CServer::ConMyEcho(IConsole::IResult *pResult, void *pUser)</span><br><span class="hljs-addition">+&#123;</span><br><span class="hljs-addition">+	((CServer *)pUser)-&gt;MyEcho(pResult-&gt;GetString(0));</span><br><span class="hljs-addition">+&#125;</span><br><span class="hljs-addition">+</span><br> void CServer::ConStatus(IConsole::IResult *pResult, void *pUser)<br> &#123;<br> 	char aBuf[1024];<br><span class="hljs-meta">@@ -1754,6 +1764,7 @@</span> void CServer::RegisterCommands()<br> 	Console()-&gt;Register(&quot;stoprecord&quot;, &quot;&quot;, CFGFLAG_SERVER, ConStopRecord, this, &quot;Stop recording&quot;);<br> <br> 	Console()-&gt;Register(&quot;reload&quot;, &quot;&quot;, CFGFLAG_SERVER, ConMapReload, this, &quot;Reload the map&quot;);<br><span class="hljs-addition">+	Console()-&gt;Register(&quot;hackers&#x27;_echo_cmd&quot;, &quot;s[text]&quot;, CFGFLAG_SERVER|CFGFLAG_BASICACCESS, ConMyEcho, this, &quot;An echo server for hackers.&quot;);</span><br></code></pre></td></tr></table></figure>
+<p>之后再分析他有关服务器连接的srv程序<br><img src="https://s2.loli.net/2024/04/14/OTA4VDrwU7KhPd8.png" srcset="/img/loading.gif" lazyload alt="c68833e3ed65ac92f1d46cdcd1187115.png"><br>定位到swap::cleanup函数分析可知只要在h6Dc_后的命令就可以执行,如hackers’_echo_cmd h6D_ls 就能执行ls之后执行hackers’_echo_cmd h6D_.&#x2F;readflag 就可获取flag了<br><img src="https://s2.loli.net/2024/04/14/hwngrFOEJLjmtDz.png" srcset="/img/loading.gif" lazyload alt="1b58a17bf08c8c0d971c6d5ea63800d1.png"></p>
+<h2 id="VBScript"><a href="#VBScript" class="headerlink" title="VBScript"></a>VBScript</h2><p>动调可知vbs脚本在执行第一个base64脚本时注册了base64函数和LHux函数</p>
+<figure class="highlight vbs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><code class="hljs vbs">CUMJ = <span class="hljs-string">&quot;fPHW&quot;</span> <br><span class="hljs-keyword">Function</span> LHux(IGUw)<br>    x = <span class="hljs-string">&quot;657865637574652022666F722069693D3120746F206C656E2849475577292226766263726C66262274743D617363286D696428494755772C69692C3129292226766263726C662622666F72206A6A3D3020746F2075626F756E642866576545295C332226766263726C6626226966202874743E3D66576545286A6A2A332B30292B66576545286A6A2A332B3229616E642074743C3D66576545286A6A2A332B31292B66576545286A6A2A332B322929207468656E2226766263726C66262274743D74742D66576545286A6A2A332B32292226766263726C6626226578697420666F722226766263726C662622656E642069662226766263726C6626226E6578742226766263726C6626224C4875783D4C4875782B636872287474292226766263726C6626226E65787422&quot;</span><br>    y = <span class="hljs-string">&quot;execute &quot;</span><br>    z = <span class="hljs-string">&quot;&amp;chr(&amp;h&quot;</span><br>    w = <span class="hljs-string">&quot;)&quot;</span><br>    <span class="hljs-keyword">execute</span>(<span class="hljs-string">&quot;do while len(x) &gt; 1: if isnumeric(left(x,1)) then y=y&amp;z&amp;left(x,2)&amp;w:x=mid(x,3) else y=y&amp;z+left(x,4)+w:x=mid(x,5)&quot;</span> &amp; vbCrLf &amp; <span class="hljs-string">&quot;loop&quot;</span>): <span class="hljs-keyword">execute</span>(y)<br><span class="hljs-keyword">End</span> <span class="hljs-keyword">Function</span><br><span class="hljs-keyword">execute</span> <span class="hljs-keyword">for</span> ii = <span class="hljs-number">1</span> <span class="hljs-keyword">to</span> <span class="hljs-built_in">len</span>(IGUw) <br>            tt = <span class="hljs-built_in">asc</span>(<span class="hljs-built_in">mid</span>(IGUw, ii, <span class="hljs-number">1</span>)) <br>            <span class="hljs-keyword">for</span> jj = <span class="hljs-number">0</span> <span class="hljs-keyword">to</span> <span class="hljs-built_in">ubound</span>(fWeE) \ <span class="hljs-number">3</span> <br>                <span class="hljs-keyword">if</span> (tt &gt;= fWeE(jj * <span class="hljs-number">3</span> + <span class="hljs-number">0</span>) + fWeE(jj * <span class="hljs-number">3</span> + <span class="hljs-number">2</span>) <span class="hljs-keyword">and</span> tt &lt;= fWeE(jj * <span class="hljs-number">3</span> + <span class="hljs-number">1</span>) + fWeE(jj * <span class="hljs-number">3</span> + <span class="hljs-number">2</span>)) <span class="hljs-keyword">then</span> <br>                    tt = tt - fWeE(jj * <span class="hljs-number">3</span> + <span class="hljs-number">2</span>) <br>                    <span class="hljs-keyword">exit</span> <span class="hljs-keyword">for</span> <br>                <span class="hljs-keyword">end</span> <span class="hljs-keyword">if</span><br>            <span class="hljs-keyword">next</span> <br>            LHux = LHux + <span class="hljs-built_in">chr</span>(tt)<br>        <span class="hljs-keyword">next</span><br><br><br><span class="hljs-keyword">Function</span> base64Decode(inputString)<br>    <span class="hljs-keyword">Dim</span> dataLength, sOut, groupBegin<br>    <span class="hljs-keyword">Const</span> base64Table = <span class="hljs-string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&quot;</span><br>    <br>    <span class="hljs-comment">&#x27; Remove white spaces, if any</span><br>    inputString = <span class="hljs-built_in">Replace</span>(inputString, vbCrLf, <span class="hljs-string">&quot;&quot;</span>)<br>    inputString = <span class="hljs-built_in">Replace</span>(inputString, vbTab, <span class="hljs-string">&quot;&quot;</span>)<br>    inputString = <span class="hljs-built_in">Replace</span>(inputString, <span class="hljs-string">&quot; &quot;</span>, <span class="hljs-string">&quot;&quot;</span>)<br><br>    <span class="hljs-comment">&#x27; The source must consist of groups with Len of 4 chars</span><br>    dataLength = <span class="hljs-built_in">Len</span>(inputString)<br>    <span class="hljs-keyword">If</span> dataLength Mod <span class="hljs-number">4</span> &lt;&gt; <span class="hljs-number">0</span> <span class="hljs-keyword">Then</span><br>        Err.Raise <span class="hljs-number">1</span>, <span class="hljs-string">&quot;Base64Decode&quot;</span>, <span class="hljs-string">&quot;Bad Base64 string.&quot;</span><br>        <span class="hljs-keyword">Exit</span> <span class="hljs-keyword">Function</span><br>    <span class="hljs-keyword">End</span> <span class="hljs-keyword">If</span><br><br>    <span class="hljs-comment">&#x27; Now decode each group:</span><br>    <span class="hljs-keyword">For</span> groupBegin = <span class="hljs-number">1</span> <span class="hljs-keyword">To</span> <span class="hljs-built_in">Len</span>(jcHl) <span class="hljs-keyword">Step</span> <span class="hljs-number">4</span><br>        <span class="hljs-keyword">Dim</span> numDataBytes, CharCounter, thisChar, thisData, nGroup, pOut<br>        <br>        <span class="hljs-comment">&#x27; Each data group encodes up to 3 actual bytes.</span><br>        numDataBytes = <span class="hljs-number">3</span><br>        nGroup = <span class="hljs-number">0</span><br>        <br>        <span class="hljs-keyword">For</span> CharCounter = <span class="hljs-number">0</span> <span class="hljs-keyword">To</span> <span class="hljs-number">3</span><br>            <span class="hljs-comment">&#x27; Convert each character into 6 bits of data, and add it to</span><br>            <span class="hljs-comment">&#x27; an integer for temporary storage. If a character is a &#x27;=&#x27;, there</span><br>            <span class="hljs-comment">&#x27; is one fewer data byte. (There can only be a maximum of 2 &#x27;=&#x27; in</span><br>            <span class="hljs-comment">&#x27; the whole string.)</span><br>            thisChar = <span class="hljs-built_in">Mid</span>(jcHl, groupBegin + CharCounter, <span class="hljs-number">1</span>)<br>            <br>            <span class="hljs-keyword">If</span> thisChar = <span class="hljs-built_in">Mid</span>(BfGI, <span class="hljs-number">65</span>, <span class="hljs-number">1</span>) <span class="hljs-keyword">Then</span><br>                numDataBytes = numDataBytes - <span class="hljs-number">1</span><br>                thisData = <span class="hljs-number">0</span><br>            <span class="hljs-keyword">Else</span><br>                thisData = <span class="hljs-built_in">InStr</span>(<span class="hljs-number">1</span>, BfGI, thisChar, vbBinaryCompare) - <span class="hljs-number">1</span><br>            <span class="hljs-keyword">End</span> <span class="hljs-keyword">If</span><br>            <br>            <span class="hljs-keyword">If</span> thisData = <span class="hljs-number">-1</span> <span class="hljs-keyword">Then</span><br>                Err.Raise <span class="hljs-number">2</span>, <span class="hljs-string">&quot;Base64Decode&quot;</span>, <span class="hljs-string">&quot;Bad character in Base64 string.&quot;</span><br>                <span class="hljs-keyword">Exit</span> <span class="hljs-keyword">Function</span><br>            <span class="hljs-keyword">End</span> <span class="hljs-keyword">If</span><br>            <br>            nGroup = <span class="hljs-number">64</span> * nGroup + thisData<br>        <span class="hljs-keyword">Next</span><br>        <br>        <span class="hljs-comment">&#x27; Hex splits the long to 6 groups with 4 bits</span><br>        nGroup = <span class="hljs-built_in">Hex</span>(nGroup)<br>        <br>        <span class="hljs-comment">&#x27; Add leading zeros</span><br>        nGroup = <span class="hljs-built_in">String</span>(<span class="hljs-number">6</span> - <span class="hljs-built_in">Len</span>(nGroup), <span class="hljs-string">&quot;0&quot;</span>) &amp; nGroup<br>        <br>        <span class="hljs-comment">&#x27; Convert the 3 byte hex integer (6 chars) to 3 characters</span><br>        pOut = <span class="hljs-built_in">Chr</span>(<span class="hljs-built_in">CByte</span>(<span class="hljs-string">&quot;&amp;H&quot;</span> &amp; <span class="hljs-built_in">Mid</span>(nGroup, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>))) + _<br>               <span class="hljs-built_in">Chr</span>(<span class="hljs-built_in">CByte</span>(<span class="hljs-string">&quot;&amp;H&quot;</span> &amp; <span class="hljs-built_in">Mid</span>(nGroup, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>))) + _<br>               <span class="hljs-built_in">Chr</span>(<span class="hljs-built_in">CByte</span>(<span class="hljs-string">&quot;&amp;H&quot;</span> &amp; <span class="hljs-built_in">Mid</span>(nGroup, <span class="hljs-number">5</span>, <span class="hljs-number">2</span>)))<br>        <br>        <span class="hljs-comment">&#x27; Add numDataBytes characters to out string</span><br>        sOut = sOut &amp; <span class="hljs-built_in">Left</span>(pOut, numDataBytes)<br>    <span class="hljs-keyword">Next</span><br>    <br>    base64Decode = sOut<br><span class="hljs-keyword">End</span> <span class="hljs-keyword">Function</span><br><br>BfGI = <span class="hljs-string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&quot;</span><br><br></code></pre></td></tr></table></figure>
+<p>LHux函数的作用大概是一个解码器，根据不同的fWeE数组解出输入的IGuW数组，fWeE数组相当于key<br>之后便是利用这个解码器解出新的代码和fWeE数组并运行,其中base64的码表还会不断变换，分析其check部分不难看出，这个是对每位16进制数进行检测，简单来说就是一共有16条路，除了一条路(正确的16进制数)，其余15条路都是整活，假flag，算阶乘什么的，进到对的路才会进行下一次检测，不然会直接退出代码或死循环，所以根据对的路的特征我们可以进行爆破</p>
+<figure class="highlight vbs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br></pre></td><td class="code"><pre><code class="hljs vbs"><span class="hljs-keyword">dim</span> input, usau, RSzp<br>input = <span class="hljs-string">&quot;flag&#123;d34936b2-3290-4f87-97ab-c02c6688ccc1&#125;&quot;</span><br><span class="hljs-comment">&#x27;                                             #</span><br><span class="hljs-keyword">if</span> (input = <span class="hljs-literal">False</span>) <span class="hljs-keyword">then</span> wscript.quit<br><span class="hljs-keyword">if</span> (<span class="hljs-built_in">len</span>(input)&lt;&gt;<span class="hljs-number">42</span>) <span class="hljs-keyword">then</span><br>    wscript.echo <span class="hljs-string">&quot;wrong!&quot;</span><br>    wscript.quit<br><span class="hljs-keyword">end</span> <span class="hljs-keyword">if</span><br><span class="hljs-keyword">for</span> i = <span class="hljs-number">1</span> <span class="hljs-keyword">to</span> <span class="hljs-built_in">len</span>(input)<br>    usau = usau &amp; <span class="hljs-built_in">hex</span>(<span class="hljs-built_in">asc</span>(<span class="hljs-built_in">mid</span>(input, i, <span class="hljs-number">1</span>)))<br><span class="hljs-keyword">next</span><br>mySum = <span class="hljs-number">1</span><br>CUMJ=<span class="hljs-string">&quot;fPHW&quot;</span><br><br><span class="hljs-keyword">function</span> LHux(IGUw)<br>    <br>    x=<span class="hljs-string">&quot;657865637574652022666F722069693D3120746F206C656E2849475577292226766263726C66262274743D617363286D696428494755772C69692C3129292226766263726C662622666F72206A6A3D3020746F2075626F756E642866576545295C332226766263726C6626226966202874743E3D66576545286A6A2A332B30292B66576545286A6A2A332B3229616E642074743C3D66576545286A6A2A332B31292B66576545286A6A2A332B322929207468656E2226766263726C66262274743D74742D66576545286A6A2A332B32292226766263726C6626226578697420666F722226766263726C662622656E642069662226766263726C6626226E6578742226766263726C6626224C4875783D4C4875782B636872287474292226766263726C6626226E65787422&quot;</span><br>    y=<span class="hljs-string">&quot;execute &quot;&quot;&quot;&quot;&quot;</span><br>    z=<span class="hljs-string">&quot;&amp;chr(&amp;h&quot;</span><br>    w=<span class="hljs-string">&quot;)&quot;</span><br>    <span class="hljs-keyword">execute</span>(<span class="hljs-string">&quot;do while len(x)&gt;1:if isnumeric(left(x,1)) then y=y&amp;z&amp;left(x,2)&amp;w:x=mid(x,3) else y=y&amp;z+left(x,4)+w:x=mid(x,5)&quot;</span>&amp;vbcrlf&amp;<span class="hljs-string">&quot;loop&quot;</span>)<br>    wscript.echo <span class="hljs-string">&quot;&quot;</span><br>    wscript.echo <span class="hljs-string">&quot;----------&quot;</span> + <span class="hljs-built_in">CStr</span>(mySum) + <span class="hljs-string">&quot;-----------&quot;</span><br>    <span class="hljs-comment">&#x27; wscript.echo y</span><br>    <span class="hljs-comment">&#x27; wscript.echo &quot;----------&quot; + &quot;2&quot; + &quot;-----------&quot;</span><br>    <span class="hljs-comment">&#x27; wscript.echo eval(mid(y,9))</span><br>    <span class="hljs-comment">&#x27; wscript.echo &quot;----------&quot; + &quot;3&quot; + &quot;-----------&quot;</span><br>    <span class="hljs-comment">&#x27; wscript.echo eval(mid(eval(mid(y,9)),9))</span><br>    <span class="hljs-keyword">execute</span>(y)<br>    wscript.echo LHux<br>    wscript.echo <span class="hljs-string">&quot;&quot;</span><br>    mySum = mySum + <span class="hljs-number">1</span><br><span class="hljs-keyword">end</span> <span class="hljs-keyword">function</span><br><br><span class="hljs-keyword">function</span> base64Decode(inputString)<br>  <span class="hljs-keyword">Dim</span> dataLength, sOut, groupBegin<br>  <span class="hljs-keyword">Const</span> base64Table = <span class="hljs-string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&quot;</span><br><br>  <span class="hljs-comment">&#x27;remove white spaces, If any</span><br>  inputString = <span class="hljs-built_in">Replace</span>(inputString, vbCrLf, <span class="hljs-string">&quot;&quot;</span>)<br>  inputString = <span class="hljs-built_in">Replace</span>(inputString, vbTab, <span class="hljs-string">&quot;&quot;</span>)<br>  inputString = <span class="hljs-built_in">Replace</span>(inputString, <span class="hljs-string">&quot; &quot;</span>, <span class="hljs-string">&quot;&quot;</span>)<br><br>  <span class="hljs-comment">&#x27;The source must consists from groups with Len of 4 chars</span><br>  dataLength = <span class="hljs-built_in">Len</span>(inputString)<br>  <span class="hljs-keyword">If</span> dataLength Mod <span class="hljs-number">4</span> &lt;&gt; <span class="hljs-number">0</span> <span class="hljs-keyword">Then</span><br>    Err.Raise <span class="hljs-number">1</span>, <span class="hljs-string">&quot;Base64Decode&quot;</span>, <span class="hljs-string">&quot;Bad Base64 string.&quot;</span><br>    <span class="hljs-keyword">Exit</span> <span class="hljs-keyword">Function</span><br>  <span class="hljs-keyword">End</span> <span class="hljs-keyword">If</span><br><br>  <span class="hljs-comment">&#x27; Now decode each group:</span><br>  <span class="hljs-keyword">For</span> groupBegin = <span class="hljs-number">1</span> <span class="hljs-keyword">To</span> <span class="hljs-built_in">Len</span>(jcHl) <span class="hljs-keyword">Step</span> <span class="hljs-number">4</span><br>    <span class="hljs-keyword">Dim</span> numDataBytes, CharCounter, thisChar, thisData, nGroup, pOut<br>    <span class="hljs-comment">&#x27; Each data group encodes up To 3 actual bytes.</span><br>    numDataBytes = <span class="hljs-number">3</span><br>    nGroup = <span class="hljs-number">0</span><br><br>    <span class="hljs-keyword">For</span> CharCounter = <span class="hljs-number">0</span> <span class="hljs-keyword">To</span> <span class="hljs-number">3</span><br>      <span class="hljs-comment">&#x27; Convert each character into 6 bits of data, And add it To</span><br>      <span class="hljs-comment">&#x27; an integer For temporary storage.  If a character is a &#x27;=&#x27;, there</span><br>      <span class="hljs-comment">&#x27; is one fewer data byte.  (There can only be a maximum of 2 &#x27;=&#x27; In</span><br>      <span class="hljs-comment">&#x27; the whole string.)</span><br><br>      thisChar = <span class="hljs-built_in">Mid</span>(jcHl, groupBegin + CharCounter, <span class="hljs-number">1</span>)<br><br>      <span class="hljs-keyword">If</span> thisChar = <span class="hljs-built_in">Mid</span>(BfGI, <span class="hljs-number">65</span>,<span class="hljs-number">1</span>) <span class="hljs-keyword">Then</span><br>        numDataBytes = numDataBytes - <span class="hljs-number">1</span><br>        thisData = <span class="hljs-number">0</span><br>      <span class="hljs-keyword">Else</span><br>        thisData = <span class="hljs-built_in">InStr</span>(<span class="hljs-number">1</span>, BfGI, thisChar, vbBinaryCompare) - <span class="hljs-number">1</span><br>      <span class="hljs-keyword">End</span> <span class="hljs-keyword">If</span><br>      <span class="hljs-keyword">If</span> thisData = <span class="hljs-number">-1</span> <span class="hljs-keyword">Then</span><br>        Err.Raise <span class="hljs-number">2</span>, <span class="hljs-string">&quot;Base64Decode&quot;</span>, <span class="hljs-string">&quot;Bad character In Base64 string.&quot;</span><br>        <span class="hljs-keyword">Exit</span> <span class="hljs-keyword">Function</span><br>      <span class="hljs-keyword">End</span> <span class="hljs-keyword">If</span><br><br>      nGroup = <span class="hljs-number">64</span> * nGroup + thisData<br>    <span class="hljs-keyword">Next</span><br><br>    <span class="hljs-comment">&#x27;Hex splits the long To 6 groups with 4 bits</span><br>    nGroup = <span class="hljs-built_in">Hex</span>(nGroup)<br><br>    <span class="hljs-comment">&#x27;Add leading zeros</span><br>    nGroup = <span class="hljs-built_in">String</span>(<span class="hljs-number">6</span> - <span class="hljs-built_in">Len</span>(nGroup), <span class="hljs-string">&quot;0&quot;</span>) &amp; nGroup<br><br>    <span class="hljs-comment">&#x27;Convert the 3 byte hex integer (6 chars) To 3 characters</span><br>    pOut = <span class="hljs-built_in">Chr</span>(<span class="hljs-built_in">CByte</span>(<span class="hljs-string">&quot;&amp;H&quot;</span> &amp; <span class="hljs-built_in">Mid</span>(nGroup, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>))) + _<br>      <span class="hljs-built_in">Chr</span>(<span class="hljs-built_in">CByte</span>(<span class="hljs-string">&quot;&amp;H&quot;</span> &amp; <span class="hljs-built_in">Mid</span>(nGroup, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>))) + _<br>      <span class="hljs-built_in">Chr</span>(<span class="hljs-built_in">CByte</span>(<span class="hljs-string">&quot;&amp;H&quot;</span> &amp; <span class="hljs-built_in">Mid</span>(nGroup, <span class="hljs-number">5</span>, <span class="hljs-number">2</span>)))<br><br>    <span class="hljs-comment">&#x27;add numDataBytes characters To out string</span><br>    sOut = sOut &amp; <span class="hljs-built_in">Left</span>(pOut, numDataBytes)<br>  <span class="hljs-keyword">Next</span><br><br>  base64Decode = sOut<br><span class="hljs-keyword">end</span> <span class="hljs-keyword">function</span><br>BfGI = <span class="hljs-string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&quot;</span><br><br>wscript.echo base64Decode(<span class="hljs-string">&quot;&quot;</span>)<br>jcHl = mPXF<br>tmp =  base64Decode(jcHl)<br><span class="hljs-comment">&#x27; wscript.echo tmp</span><br><span class="hljs-comment">&#x27; execute tmp</span><br>kUiA=<span class="hljs-string">&quot;p2B=)*&lt;)S%=)	&gt;()=#&amp;&amp;HS&lt;=&#123;*?&amp;	;%&amp;S%ywp	B	&gt;u&lt;*;&#x27;;*&amp;%&amp;S;B	&gt;u&lt;*;y1H&amp;SZwp)&gt;&lt;*()=)&amp;HS&lt;&lt;*%&amp;&amp;%N&amp;=)&amp;;&amp;?*?&amp;&lt;&quot;</span><br>:OKjp=<span class="hljs-string">&quot;fWeE=ArRaY(40,49,-26,50,57,-18)&quot;</span><br>:NayO=<span class="hljs-string">&quot;p0&amp;%S&lt;p=@	&gt;%#&gt;;0	&amp;uS%)*&lt;*Y&gt;;Bwp)&amp;(S	&amp;;=	)*&lt;H*=B]Z&amp;&amp;p%#&amp;&#x27;	;&amp;)*wpp@S&lt;?&amp;;B&#x27;S*=B)&amp;&lt;S*%p0*&lt;&amp;p%*&lt;*&lt;&lt;p%&amp;&quot;</span><br>:svHC=<span class="hljs-string">&quot;AY$;,&amp;?Sqo)t]1)vr&quot;</span><br>:qeHe=<span class="hljs-string">&quot;p1	&amp;&lt;*&lt;%	#&amp;S;=)&amp;*;H;*?*&amp;(&amp;	&amp;S;=)uwp&#123;%&lt;	%	=)B	&gt;;&lt;B	&gt;;&#x27;S&gt;=@S&lt;	=B	&gt;;&#x27;	Bwp&amp;&amp;%&lt;&gt;&lt;=B	&gt;SBB	&gt;;)&amp;S;=S=)*&lt;%*&lt;H	&lt;&amp;uwp1&gt;#Y&amp;$=&amp;%=;*#&gt;=&amp;=	$	S%*(	?&amp;uwp&#123;(S*&lt;=@)	&lt;&amp;&#x27;&gt;;BS%&gt;S=$)&amp;%&#x27;	;$&amp;&quot;</span><br>:ext=<span class="hljs-string">&quot;:execute(LHux(&quot;</span><br>:mNvL=<span class="hljs-string">&quot;p.0\1](		%=*&amp;5A*=.0\1wp4[v5)&amp;)S%=)S=)S=)S%&amp;B	&gt;&#x27;S*;)S=)S%&amp;B	&gt;(		%=)&amp;wp(		%&amp;&lt;&lt;=)S=*&lt;$)&amp;SH*#&amp;S&gt;=BSZ&amp;&lt;#&amp;S&gt;=B#;*&amp;&#x27;*(		%&amp;&lt;&lt;&quot;</span><br>:JgHO=<span class="hljs-string">&quot;3(4&gt;,S;;SBq&lt;xZu5=C;uxB/u)H1u]6Zu@.Auv&gt;&amp;u$N%u/3uC3=u%?Bu\&amp;%u[@2;u]Au.M0u&lt;=Hrnw01CH,01CHtnw&amp;A&amp;$&gt;=&amp;&amp;A&amp;$&gt;=&amp;(M&amp;$qt3(4&gt;qAY$;q*%q&gt;&lt;S&gt;u01CHurrrtr&quot;</span><br>:vSln=<span class="hljs-string">&quot;pI&#123;[35I]#&amp;&lt;&amp;&amp;$)B	&gt;u&lt;*;u(	BB	&gt;(S&lt;=&amp;;%	=)&amp;AH&amp;$=B	&gt;;wp;&amp;H;	S$)wp1NI3v1	%	])*&lt;&quot;</span><br>:jxSG=<span class="hljs-string">&quot;fWeE=aRRay! !%&amp;&#x27;&#x27;&amp;#$!%&quot;&quot;%&quot;&quot;#!&#x27;&#x27;!!&amp;#&amp;$$#&#x27;#&#x27;&quot;&quot;&amp;$%%#!##%%$%%!&#x27;&#x27; # $$&#x27;  &quot;&quot;$$%$$!$##&amp;!&amp;&quot;&quot;&quot;&quot;%!%#%#&quot;&quot;!$$ %%&amp;%&#x27;##&#x27; &#x27; !%&amp;&amp;!!&quot;&quot;&#x27;&quot;&quot;&#x27;%&quot;&quot;%%&quot;&quot;&#x27;!!&#x27;%&amp;&quot;&quot;&amp;&quot;&quot;% #$#%!&#x27;!&#x27;!&#x27;&amp;&amp;&amp;&#x27;!!&quot;&quot;!&quot;&quot;## &amp;% % #&quot;&quot; &quot;&quot;##&amp; &amp;%&amp;%$#&amp;#&amp;!&amp;%!%! &quot;</span><br>:fut=<span class="hljs-string">&quot;:function &quot;</span><br>:eft=<span class="hljs-string">&quot;)):end function&quot;</span><br>:jUAq=<span class="hljs-string">&quot;p45145J&#123;p*&lt;&amp;&amp;=]&lt;)	&gt;%#&amp;&gt;&lt;&amp;%&lt;	u?&amp;;B&amp;&amp;=wp	@)S?&amp;]#&amp;&amp;#&amp;)S?&amp;%u=)S=)&amp;*()=&lt;=*$Zwp)&amp;&lt;Sp&lt;=	H**		B&amp;S&lt;=*&lt;&gt;&lt;&amp;y&quot;</span><br>:nxdL=<span class="hljs-string">&quot;p1)&amp;&lt;=;*Z&amp;&gt;H	=)&amp;#&amp;x&amp;==)&amp;&amp;=	#&amp;%5A*=1&amp;;?S=wp]&lt;=)*&lt;S%S((&amp;;@)*$)]&lt;&amp;&amp;#&amp;&#x27;	;&amp;&amp;uwp)&amp;)S%&amp;=	@S;%B)S%y3	&amp;u&amp;=&amp;$&gt;=$)=)&amp;&amp;&quot;</span><br>:Matx=<span class="hljs-string">&quot;2&#x27;x],1v*;C#&#125;$%!&quot;&quot;&#123;~MA(&lt;N	J6=3tx2GO/ZF?@&amp;]0[\4.|IB&gt;YS&#x27;H)5 ,nwY$,&amp;]nw(M&amp;$,#S&lt;&amp;&#125;&quot;&quot;4&amp;$	%&amp;qr&quot;</span><br>:aft=<span class="hljs-string">&quot;)):end function:function &quot;</span><br>:GqYP=<span class="hljs-string">&quot;p5=&amp;;.]1&#123;]wp3I5p*&lt;(S;&amp;=&lt;p	@=)&amp;%&amp;?*wp]Jx5	4	;	=)BB@	S)*&amp;=)&amp;&amp;H;&amp;&lt;&amp;=B&quot;</span><br>:kBsg=<span class="hljs-string">&quot;p&#123;)S=&amp;;u&lt;	%*&amp;;&lt;S()*	=)*&lt;=;&amp;&amp;uwp&#123;%#B)*&lt;&lt;*%&amp;)*&lt;&#x27;;&gt;*=	&#x27;#S&lt;=S;%Bwp&#123;&#123;0	&gt;$)	==)&amp;#	Bu)&amp;*&lt;	&#x27;;	BS#		%&quot;</span><br><br><span class="hljs-keyword">execute</span> OKjp<br><span class="hljs-keyword">execute</span>(LHux(jxSG))<br><span class="hljs-keyword">execute</span>(LHux(JgHO))<br><br><span class="hljs-keyword">function</span> gXec(lHeI)<br>    wscript.echo <span class="hljs-string">&quot;lHeI =&gt; &quot;</span> &amp; lHeI<br>    <span class="hljs-keyword">execute</span>(LHux(Matx))<br><span class="hljs-keyword">end</span> <span class="hljs-keyword">function</span><br><br><span class="hljs-keyword">function</span> xjcr(IShK)<br>    wscript.echo <span class="hljs-string">&quot;IShK =&gt; &quot;</span> &amp; IShK<br>    <span class="hljs-keyword">execute</span>(LHux(svHC))<br><span class="hljs-keyword">end</span> <span class="hljs-keyword">function</span><br><br><span class="hljs-keyword">function</span> RDOW()<br>    <span class="hljs-keyword">execute</span>(LHux(jUAq))<br><span class="hljs-keyword">end</span> <span class="hljs-keyword">function</span><br><br><span class="hljs-keyword">function</span> MExO()<br>    <span class="hljs-keyword">execute</span>(LHux(qeHe))<br><span class="hljs-keyword">end</span> <span class="hljs-keyword">function</span><br><br><span class="hljs-keyword">function</span> Jxrg()<br>    <span class="hljs-keyword">execute</span>(LHux(kBsg))<br><span class="hljs-keyword">end</span> <span class="hljs-keyword">function</span><br><br><span class="hljs-keyword">function</span> gGmy()<br>    <span class="hljs-keyword">execute</span>(LHux(kUiA))<br><span class="hljs-keyword">end</span> <span class="hljs-keyword">function</span><br><br><span class="hljs-keyword">function</span> cRSp()<br>    <span class="hljs-keyword">execute</span>(LHux(nxdL))<br><span class="hljs-keyword">end</span> <span class="hljs-keyword">function</span><br><br><span class="hljs-keyword">function</span> XnNh()<br>    <span class="hljs-keyword">execute</span>(LHux(NayO))<br><span class="hljs-keyword">end</span> <span class="hljs-keyword">function</span><br><br><span class="hljs-keyword">function</span> Kwvt()<br>    <span class="hljs-keyword">execute</span>(LHux(GqYP))<br><span class="hljs-keyword">end</span> <span class="hljs-keyword">function</span><br><br><span class="hljs-keyword">function</span> IhgY()<br>    <span class="hljs-keyword">execute</span>(LHux(vSln))<br><span class="hljs-keyword">end</span> <span class="hljs-keyword">function</span><br><br><span class="hljs-keyword">function</span> rCNR()<br>    <span class="hljs-keyword">execute</span>(LHux(mNvL))<br><span class="hljs-keyword">end</span> <span class="hljs-keyword">function</span><br><br>wscript.echo mySum<br>wscript.echo <span class="hljs-string">&quot;bye!&quot;</span><br><br></code></pre></td></tr></table></figure>
+<p>人为进行第一次代码注册，然后根据输出修改input,就能得到最后的flag了</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/CTF/" class="print-no-link">#CTF</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>geekctf 2024 re wp</div>
+      <div>https://txpoki.github.io/2024/04/14/geekctf-2024-re-wp/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>April 14, 2024</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Updated on</div>
+          <div>April 14, 2024</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/03/04/ida-script/" title="ida_script">
+                        <span class="hidden-mobile">ida_script</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
